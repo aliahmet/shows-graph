@@ -29,7 +29,7 @@ def truncate(s, lenght):
     return s
 
 
-def show_progress(current, total, title):
+def show_progress(current, total, title, completed=False):
     width = min(get_width(), 150)
     title = "[%-30s]" % truncate(title, 30)
     step = int(log(total, 10)) + 1
@@ -41,5 +41,5 @@ def show_progress(current, total, title):
     square_count = width - (len(counter) + len(title) + 5)
     progress_count = int(square_count / total) * current
     progress = (progress_count * "#").ljust(square_count, " ")
-    print("[%s] %s %s" % (progress, counter, title), end="\r")
+    print("[%s] %s %s" % (progress, counter, title), end="\n" if completed else "\r")
     stdout.flush()
