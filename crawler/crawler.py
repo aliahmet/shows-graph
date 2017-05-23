@@ -71,7 +71,10 @@ def parse_character_name_and_count(td):
     else:
         character_name = "Unknown"
 
-    episode_count = int(content.split("episode")[0].split("(")[-1].strip())
+    try:
+        episode_count = int(content.split("episode")[0].split("(")[-1].strip())
+    except:
+        episode_count = 0
     return character_name, episode_count
 
 
@@ -89,23 +92,22 @@ def parse_cast(main_soap):
         if first_count is None:
             first_count = episode_count
         existance = episode_count / first_count
-        all_actors[actor_link] = actor_name
         yield actor_link, actor_name, episode_count, existance, character_name
 
 
 def generate_jsons():
     connections_graph = []
-    for (x, y) in connections_list.items():
-        if len(y) != 0:
-            connection = OrderedDict()
-            connection["source_name"] = all_titles[x[0]]
-            connection["target_name"] = all_titles[x[1]]
-            connection["source"] = x[0]
-            connection["target"] = x[1]
-            connection["actor_count"] = len(y)
-            connection["actors"] = y
+    for (titles, actors) in connections_list.items():
+        if len(actors) != 0:
+            for i, actor in enumerate(actors):
+                connection = OrderedDict()
+                connection["source"] = all_titles[titles[0]]
+                connection["target"] = all_titles[titles[1]]
+                connection["actor"] = actor
+                connection["index"] = i
+                connection["count"] = len(actors)
 
-            connections_graph.append(connection)
+                connections_graph.append(connection)
 
     open("people.json", "w").write(json.dumps(all_actors, ensure_ascii=False, indent=4))
     open("titles.json", "w").write(json.dumps(all_titles, ensure_ascii=False, indent=4))
@@ -118,16 +120,19 @@ def intersect(actor_set_1, actor_set_2):
         for actor_2 in actor_set_2:
             id_1 = actor_1[0]
             id_2 = actor_2[0]
-            c1 = actor_1[2]
-            a2 = actor_2[1]
-            c2 = actor_2[2]
             if id_1 != id_2:
                 # Isim benzeligi olabilir o yuzden idler
                 continue
-            if c1 * c2 < 5:
+
+            actor_real_name = actor_2[1]
+            count_1 = actor_1[2]
+            count_2 = actor_2[2]
+            if count_1 * count_2 < 5:
                 continue
 
-            actors.append([actor_2[1], actor_1[4], actor_2[4]])
+            all_actors[id_1] = actor_real_name
+
+            actors.append([actor_real_name, actor_1[4], actor_2[4]])
     return actors
 
 
