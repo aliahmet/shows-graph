@@ -127,7 +127,7 @@ def intersect(actor_set_1, actor_set_2):
             actor_real_name = actor_2[1]
             count_1 = actor_1[2]
             count_2 = actor_2[2]
-            if count_1 * count_2 < 5:
+            if count_1 < 50 and count_2 < 50:
                 continue
 
             all_actors[id_1] = actor_real_name

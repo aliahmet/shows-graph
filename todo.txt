@@ -1,0 +1,1 @@
+[ ] Oyuncu türlerine göre farklı oklar (Asıl, Yardımcı)

@@ -39,7 +39,7 @@ def show_progress(current, total, title, completed=False):
     # width = (counter + title + 5) + square_count
     # square_count = width - (counter + title + 4)
     square_count = width - (len(counter) + len(title) + 5)
-    progress_count = int(square_count / total) * current
+    progress_count = int(square_count * (current / total))
     progress = (progress_count * "#").ljust(square_count, " ")
     print("[%s] %s %s" % (progress, counter, title), end="\n" if completed else "\r")
     stdout.flush()
